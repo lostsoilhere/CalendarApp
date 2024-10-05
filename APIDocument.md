@@ -66,8 +66,9 @@
         "start_time": "10:00",
         "end_time": "11:00",
         "invitee_name": "Rakesh"
-        "invitee_email: "abc@gmail.com"
+        "invitee_email": "abc@gmail.com"
         "comment" : "Interview R1" 
       },
+      ...
     ]
   }
