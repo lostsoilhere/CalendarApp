@@ -4,15 +4,15 @@
 
 - **URL**: `/set_availability`
 - **Method**: POST
-- **Body**:
+- **Body**: 
   ```json
   {
     "name": "Kumar",
     "emailId": "xyz@gmail.com"
     "start_time": "09:00",
     "end_time": "17:00",
-    "start_date" : 02/10/2024,
-    "end_date" : 10/10/2024
+    "start_date" : "02/10/2024",
+    "end_date" : "10/10/2024"
   }
 
 - **Response**:
@@ -65,8 +65,9 @@
         "date": "2024-09-30",
         "start_time": "10:00",
         "end_time": "11:00",
-        "invitee_name": "John Doe"
+        "invitee_name": "Rakesh"
+        "invitee_email: "abc@gmail.com"
+        "comment" : "Interview R1" 
       },
-      ...
     ]
   }
