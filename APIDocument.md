@@ -69,6 +69,5 @@
         "invitee_email": "abc@gmail.com"
         "comment" : "Interview R1" 
       },
-      ...
     ]
   }
