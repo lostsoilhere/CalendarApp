@@ -3,6 +3,11 @@ package model;
 import java.util.Optional;
 
 public class Invitation {
-    Invitee invitee;
-    String comment;
+    private final Invitee invitee;
+    private final String comment;
+
+    public Invitation(Invitee invitee, String comment) {
+        this.invitee = invitee;
+        this.comment = comment;
+    }
 }

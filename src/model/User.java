@@ -1,8 +1,11 @@
 package model;
 
 public class User {
-    Long userId;
-    String emailId;
-    String name;
-    Calendar calendar;
+    private final String name;
+    private final String email;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

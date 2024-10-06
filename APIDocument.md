@@ -65,9 +65,10 @@
         "date": "2024-09-30",
         "start_time": "10:00",
         "end_time": "11:00",
-        "invitee_name": "Rakesh"
-        "invitee_email": "abc@gmail.com"
+        "invitee_name": "Rakesh",
+        "invitee_email": "abc@gmail.com",
         "comment" : "Interview R1" 
-      },
+      }
     ]
   }
+  ```
