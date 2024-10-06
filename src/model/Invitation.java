@@ -10,4 +10,12 @@ public class Invitation {
         this.invitee = invitee;
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "Invitation{" +
+                "invitee=" + invitee +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }
