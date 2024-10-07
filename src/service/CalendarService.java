@@ -13,35 +13,23 @@ import java.util.List;
 import java.util.Map;
 
 public class CalendarService {
-    private final Map<Long, Calendar> calendarMap = new HashMap<>();
 
-    public void setAvailability(final Long userId, final String emailId, final String name, final LocalTime startTime, final LocalTime endTime) {
-        final Calendar calendar = calendarMap.computeIfAbsent(userId, k -> new Calendar(new User(name, emailId), new HashMap<>(), new Availability(startTime, endTime)));
-        System.out.println("Availability set successfully\n");
-    }
-
-    public void bookAppointment(final Long userId,
+    public void bookAppointment(final Calendar calendar,
                                 final LocalDate date,
                                 final LocalTime startTime,
-                                final String inviteeEmailId,
-                                final String inviteeName,
-                                final String comment) throws UserNotRegisteredException, InvalidAppointmentException, IllegalSlotException {
-        final Calendar calendar = calendarMap.getOrDefault(userId, null);
+                                final Invitation invitation) throws UserNotRegisteredException, InvalidAppointmentException, IllegalSlotException {
         final LocalTime endTime = startTime.plusHours(1);
         // validating that the request is valid
-        validateUser(calendar);
+        validateUserCalendar(calendar);
         validateStartTime(startTime);
         validateAppointment(calendar.getAvailability(), startTime, endTime);
 
         final List<Appointment> calendarAppointments = calendar.getCalenderAppointmentsMap().computeIfAbsent(date, k -> new ArrayList<Appointment>());
-        List<LocalTime> availableSlots = searchAvailableTimeSlots(userId, date);
+        List<LocalTime> availableSlots = searchAvailableTimeSlots(calendar, date);
         if (!availableSlots.contains(startTime)) {
             throw new IllegalSlotException();
         }
-        final Invitee invitee = new Invitee(inviteeName, inviteeEmailId);
-        final Invitation invitation = new Invitation(invitee, comment);
         Appointment appointment = new Appointment(startTime, endTime, invitation);
-        System.out.println(appointment);
         calendarAppointments.add(appointment);
 
     }
@@ -56,30 +44,26 @@ public class CalendarService {
         if(startTime.isBefore(availability.startTime()) || endTime.isAfter(availability.endTime())) throw new InvalidAppointmentException();
     }
 
-    private void validateUser(Calendar calendar) throws UserNotRegisteredException{
+    private void validateUserCalendar(Calendar calendar) throws UserNotRegisteredException{
         if(calendar == null) throw new UserNotRegisteredException();
     }
 
-    public void showUpcomingAppointments(Long userId, LocalDate date) throws UserNotRegisteredException, InvalidAppointmentException {
-        final Calendar calendar = calendarMap.getOrDefault(userId, null);
-        validateUser(calendar);
+    public List<Appointment> showUpcomingAppointments(Calendar calendar, LocalDate date) throws UserNotRegisteredException, InvalidAppointmentException {
+        validateUserCalendar(calendar);
         final List<Appointment> appointments = calendar.getCalenderAppointmentsMap().getOrDefault(date, null);
         if(appointments == null) throw  new InvalidAppointmentException();
-        appointments.forEach(System.out::println);
+        return appointments;
     }
 
-    public List<LocalTime> searchAvailableTimeSlots(Long userId, LocalDate date) {
-        final Calendar calendar = calendarMap.getOrDefault(userId, null);
-        validateUser(calendar);
+    public List<LocalTime> searchAvailableTimeSlots(Calendar calendar, LocalDate date) {
+        validateUserCalendar(calendar);
         Availability availability = calendar.getAvailability();
         List<LocalTime> allSlots = generateAllSlots(availability.startTime(), availability.endTime());
         List<Appointment> appointments = calendar.getCalenderAppointmentsMap().get(date);
 
-        List<LocalTime> slots = allSlots.stream()
+        return allSlots.stream()
                 .filter(slot -> isSlotAvailable(slot, appointments))
                 .toList();
-        slots.forEach(System.out::println);
-        return slots;
     }
 
     private boolean isSlotAvailable(LocalTime slot, List<Appointment> appointments) {

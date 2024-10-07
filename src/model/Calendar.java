@@ -6,7 +6,8 @@ import java.util.Map;
 
 public class Calendar {
     private final User user;
-    private final Availability availability;
+
+    private Availability availability;
     private final Map<LocalDate, List<Appointment>> calenderAppointmentsMap;
 
     public Map<LocalDate, List<Appointment>> getCalenderAppointmentsMap() {
@@ -15,6 +16,10 @@ public class Calendar {
 
     public Availability getAvailability() {
         return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 
     public Calendar(User user, Map<LocalDate, List<Appointment>> calenderAppointmentsMap, Availability availability) {

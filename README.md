@@ -12,4 +12,5 @@
 2. Test the end to end flow. 
 3. Add unit test for all the public methods. 
 4. Refactor the classes according to SOLID principles. 
+5. Add documentation for the design
 -->
