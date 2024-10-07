@@ -1,4 +1,4 @@
-package model;
+package com.example.CalendarApp.model;
 
 public class Invitee {
     String name;

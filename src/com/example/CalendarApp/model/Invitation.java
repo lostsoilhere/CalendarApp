@@ -1,6 +1,4 @@
-package model;
-
-import java.util.Optional;
+package com.example.CalendarApp.model;
 
 public class Invitation {
     private final Invitee invitee;

@@ -1,4 +1,4 @@
-package model;
+package com.example.CalendarApp.model;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,10 +6,12 @@ import java.util.Map;
 
 public class Calendar {
     private final User user;
-
     private Availability availability;
     private final Map<LocalDate, List<Appointment>> calenderAppointmentsMap;
 
+    public User getUser() {
+        return user;
+    }
     public Map<LocalDate, List<Appointment>> getCalenderAppointmentsMap() {
         return calenderAppointmentsMap;
     }

@@ -1,14 +1,13 @@
-package driver;
+package com.example.CalendarApp.driver;
 
-import exception.IllegalSlotException;
-import model.*;
-import service.CalendarService;
+import com.example.CalendarApp.exception.IllegalSlotException;
+import com.example.CalendarApp.model.Calendar;
+import com.example.CalendarApp.model.*;
+import com.example.CalendarApp.service.CalendarService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static final Map<Long, Calendar> calendarMap = new HashMap<>();
@@ -59,6 +58,7 @@ public class Main {
     private static void setAvailability(Scanner scanner) {
         System.out.print("Enter Calendar Owner ID: ");
         Long id = scanner.nextLong();
+        scanner.nextLine();
         System.out.print("Enter the start time for the Calendar Owner Availability (in HH:MM format) : ");
         String startTimeString = scanner.nextLine();
         LocalTime startTime = LocalTime.parse(startTimeString);
@@ -70,11 +70,14 @@ public class Main {
         if(calendar == null) {
             System.out.println("The user calendar doesn't exist in the system, please register the user");
             User user = registerUser(scanner);
-            calendarMap.put(id, new Calendar(user, new HashMap<>(), availability));
+            calendar = new Calendar(user, new HashMap<>(), availability);
+            calendarMap.put(id, calendar);
         }
         else {
             calendar.setAvailability(availability);
         }
+
+        System.out.println("Availability set for :" + calendar.getUser().toString());
 
     }
 
@@ -94,6 +97,7 @@ public class Main {
     private static Calendar getUserCalendar(Scanner scanner) {
         System.out.print("Enter Calendar Owner ID: ");
         Long id = scanner.nextLong();
+        scanner.nextLine();
         return calendarMap.getOrDefault(id, null);
     }
 
@@ -123,13 +127,16 @@ public class Main {
 
         // use CalendarService to book appointment
         calendarService.bookAppointment(calendar, date, startTime, invitation);
-
     }
 
     private static void listUpcomingAppointments(Scanner scanner, CalendarService calendarService) {
         // get user calendar
         Calendar calendar = getUserCalendar(scanner);
         // use CalendarService to print upcoming booking.
-        calendarService.showUpcomingAppointments(calendar, LocalDate.now()).forEach(System.out::println);
+        List<Appointment> appointments = calendarService.showUpcomingAppointments(calendar, LocalDate.now());
+        Optional.ofNullable(appointments)
+                .orElse(Collections.emptyList())
+                .forEach(System.out::println);
+        if(appointments == null || appointments.isEmpty()) System.out.println("No upcoming appointment for the user");
     }
 }

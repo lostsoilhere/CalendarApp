@@ -1,6 +1,5 @@
-package model;
+package com.example.CalendarApp.model;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Appointment {

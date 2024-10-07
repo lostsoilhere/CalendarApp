@@ -1,16 +1,19 @@
-package service;
+package com.example.CalendarApp.service;
 
-import exception.IllegalSlotException;
-import exception.InvalidAppointmentException;
-import exception.UserNotRegisteredException;
-import model.*;
+import com.example.CalendarApp.exception.IllegalSlotException;
+import com.example.CalendarApp.exception.InvalidAppointmentException;
+import com.example.CalendarApp.exception.UserNotRegisteredException;
+import com.example.CalendarApp.model.Appointment;
+import com.example.CalendarApp.model.Availability;
+import com.example.CalendarApp.model.Calendar;
+import com.example.CalendarApp.model.Invitation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public class CalendarService {
 
@@ -24,7 +27,7 @@ public class CalendarService {
         validateStartTime(startTime);
         validateAppointment(calendar.getAvailability(), startTime, endTime);
 
-        final List<Appointment> calendarAppointments = calendar.getCalenderAppointmentsMap().computeIfAbsent(date, k -> new ArrayList<Appointment>());
+        final List<Appointment> calendarAppointments = calendar.getCalenderAppointmentsMap().computeIfAbsent(date, k -> new ArrayList<>());
         List<LocalTime> availableSlots = searchAvailableTimeSlots(calendar, date);
         if (!availableSlots.contains(startTime)) {
             throw new IllegalSlotException();
@@ -44,15 +47,13 @@ public class CalendarService {
         if(startTime.isBefore(availability.startTime()) || endTime.isAfter(availability.endTime())) throw new InvalidAppointmentException();
     }
 
-    private void validateUserCalendar(Calendar calendar) throws UserNotRegisteredException{
+    private void validateUserCalendar(Calendar calendar) throws UserNotRegisteredException {
         if(calendar == null) throw new UserNotRegisteredException();
     }
 
     public List<Appointment> showUpcomingAppointments(Calendar calendar, LocalDate date) throws UserNotRegisteredException, InvalidAppointmentException {
         validateUserCalendar(calendar);
-        final List<Appointment> appointments = calendar.getCalenderAppointmentsMap().getOrDefault(date, null);
-        if(appointments == null) throw  new InvalidAppointmentException();
-        return appointments;
+        return calendar.getCalenderAppointmentsMap().getOrDefault(date, null);
     }
 
     public List<LocalTime> searchAvailableTimeSlots(Calendar calendar, LocalDate date) {
@@ -67,7 +68,9 @@ public class CalendarService {
     }
 
     private boolean isSlotAvailable(LocalTime slot, List<Appointment> appointments) {
-        return appointments.stream()
+        return Optional.ofNullable(appointments)
+                .orElse(Collections.emptyList()) // Empty list if appointments is null
+                .stream()
                 .noneMatch(appointment -> appointment.getStartTime().equals(slot));
     }
 
